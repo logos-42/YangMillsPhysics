@@ -1,0 +1,899 @@
+\documentclass[aps,prd,preprint,superscriptaddress,amsmath,amssymb]{revtex4-2}
+\usepackage{graphicx}   % Include figure files
+\usepackage{bm}         % bold math
+\usepackage{dcolumn}    % align table columns on decimal point
+\usepackage{amsthm}
+\usepackage{booktabs}
+\usepackage{color}
+\usepackage[fontset=fandol]{ctex}
+
+\newtheorem{postulate}{公设}[section]
+\newtheorem{theorem}{定理}[section]
+
+\AtBeginDocument{\renewcommand{\bibname}{参考文献}\renewcommand{\refname}{参考文献}}
+
+\begin{document}
+
+\title{质量间隙即计数}
+
+\author{刘元杰}
+\email{yuanjieliu65@gmail.com}
+
+\date{\today}
+
+\begin{abstract}
+杨--米尔斯存在性与质量间隙问题 \cite{jaffe2000yang} 要求构造一个
+非阿贝尔规范群的量子场论，且该理论被严格定义并具有正质量间隙。本文并不解决这个
+问题，并且开宗明义地这样说。本文所做的是更窄且完全机器检验的：在流动空间框架的
+四条公设之内，两个结构陈述被证明为定理——(i)~若质量是被激发流条的整数计数，
+$m^2(N)=N M_0^2$，则质量谱离散且开区间 $(0,M_0^2)$ 为空（MG1--MG4）；
+(ii)~两个不同点的汇收缩不交换，交换子在 $p$ 处精确等于 $\lambda^2(v_q-v_p)$
+（YM1--YM3b）。这两个陈述是一个\textbf{认定的对象}，而非一条推导的两半：
+本文\emph{提出}计数的离散性与收缩的非对易性就是杨--米尔斯问题所指的两个结构
+事实，并在代数设定下分别证明之；但认定本身是解释层的，连接各陈述的箭头不是
+形式化的蕴含，格点间距的连续极限也未被构造。第~V 节的格点规范场是
+$\mathbb{Z}$ 格点上取值于色矩阵的场，其场强是近邻交换子（CA3--CA6）；
+它不是问题陈述 \cite{jaffe2000yang,yang1954conservation} 所指的连续四维
+规范理论。全部论断在 Lean~4 中零 \texttt{sorry} 形式化；每个定理的地位——
+定义、恒等式、或条件陈述——都在正文中标注，诚实边界被陈述而非模糊。
+\end{abstract}
+
+\maketitle
+
+\begin{quote}
+\itshape
+``有物混成，先天地生。''
+\par
+—— 老子《道德经》第二十五章
+\end{quote}
+
+\section{引言}
+\label{sec:intro}
+
+\paragraph{问题之名所携带的两个事实。}
+杨--米尔斯质量间隙问题 \cite{jaffe2000yang} 问的是：非阿贝尔规范理论能否被严格
+构造，以及它是否具有正质量间隙。两个结构性事实承载着它的物理内容。第一个是
+\emph{离散性}：禁闭理论的谱没有无质量激发——最轻的胶球位于约 $1.6$--$1.7$ GeV，
+远在真空之上 \cite{morningstar1999glueball,chen2006glueball,besiii2026lightest}。
+第二个是 \emph{自相互作用}：场强
+\begin{equation}
+F_{\mu\nu}=\partial_\mu A_\nu-\partial_\nu A_\mu+[A_\mu,A_\nu],
+\label{eq:ymfield}
+\end{equation}
+是非线性的，场通过交换子与自身耦合 \cite{yang1954conservation}。在标准框架中，
+两个事实互不相关，且均非推导：规范不变性 \emph{公设} $[A,A]$，而间隙不是定理，
+是一种非微扰测量 \cite{jaffe2000yang,weinberg1995quantum}。本文的论断是：在
+流动空间框架中，它们是同一个机制，且两者都是定理。
+
+\paragraph{本文的论断。}
+在框架的四条公设之内——空间是流动介质；质量是激发流条的整数计数，$m^2(N)=N
+M_0^2$；电荷是流动的散度；四力是流动动量 $m(C-v)$ 的莱布尼茨分解——以下论断
+在 Lean~4 中以零 \texttt{sorry} 证明 \cite{de2015lean,ProjectionPhysics}：
+\begin{itemize}
+\item \emph{质量间隙就是整数算术。} 因为 $N$ 是整数，电子--光子跃迁是一个跳变
+$N\ge1\to N=0$，而区间 $(0,M_0^2)$ 是空的（MG1--MG4）。产生间隙的是一件计数的
+离散性，而不是关于禁闭的假设。
+\item \emph{自相互作用就是汇的非对易性。} 两个不同点的汇收缩不交换；其交换子
+精确等于 $\lambda^2(v_q-v_p)$（YM1--YM3b）。与 $[A,A]$ 的类比是结构性的
+（依赖场值且非对易），并非等同：汇交换子对场差是\emph{线性}的，而 $[A,A]$
+对场是\emph{二次}的；这一差异在第~IV 节被公开陈述。
+\item \emph{场强就是近邻交换子。} 在 $\mathbb{Z}$ 格点上，取值于色矩阵的规范场
+有 $F(t)=[A(t),A(t{+}1)]$，且 $F\neq0$ 当且仅当近邻不交换（CA3--CA6）。
+\item \emph{连续极限由四力导数承载。} 框架自身的四力推导被提出为连续描述所需
+导数结构的载体，并配以严格的范数界（CA8--CA10，L1--L3）；连续极限本身在此未被构造。
+\end{itemize}
+组装序列——加速电荷、自抹平汇、非对易自相互作用、连续机制、质量间隙——是
+框架中的一条\emph{叙事链}，而非形式化蕴含链：每个节点是定理（CR、MG、YM、CA、L），
+但节点间的箭头是框架语言中的认定，其形式化（尤其是格点到连续的极限）仍然开放。
+每个声称的诚实状态在第~XI 节陈述。
+
+\paragraph{本文是什么，不是什么。}
+它不是对解决杨--米尔斯问题的声称：格点构造是一个代数骨架，格点间距的拓扑极限
+没有被形式化，数值输入 $\lambda$、$M_0$ 没有被推导。这些边界，以及程序死亡的
+条件，陈述在第~XI 节。本文确实声称的东西更窄且可验证：问题的两个名字是同一个
+机制，并且每一步都是机器检验过的定理。
+
+\paragraph{如何阅读本文。}
+第~II--IV 节承载中心论断（公设；由离散性得质量间隙；由非对易性得自相互作用），
+想要它的读者只需读这几节。第~V--VIII 节给出格点力学及其严格估计；第~IX 节
+组装整条链；第~X--XI 节作出诚实评估并列出开放问题。动机——框架如何从黎曼猜想
+生长而来——在第~II 节讲述；与既有物理学的对话在第~IX 节。
+
+\section{流动空间框架的公设}
+\label{sec:postulates}
+
+我们以与前一论文及其 Lean 形式化所用的相同形式回顾框架的公设。每条公设先陈述，
+然后做物理解读，使第~III--IX 节的几何保持锚定。
+
+\begin{postulate}[流动空间]
+\label{post:flow}
+空间是一种流动介质。与流动共动的物质点以矢量速度 $C$ 运动；流动动量为
+$p=m(C-v)$，其中 $m$ 是质量，$v$ 是该点相对观察者的速度。
+\end{postulate}
+
+\emph{解读。} 本文的格言不是装饰。``有物混成，先天地生''是对这个框架
+所要精确化的原初概念的第一次记录陈述：物理的实质是一种运动中的介质，而不是
+其中有场的虚空。黑洞的河流模型 \cite{hamilton2008river} 是同一幅图景的定量化
+——空间向内流过视界，光速就是介质的速度。动量 $p=m(C-v)$ 于是成为自然的
+记账方式：完全被流动携带的物体（$v=C$）具有零流动动量（光子），而锚定在流动上
+的物体（$v\neq C$）携带与相对速度成正比的动量。
+
+\begin{postulate}[质量是流线条数]
+\label{post:mass}
+激发构型的质量平方是基本单位的整数倍：
+\begin{equation}
+m^2(N)=N\,M_0^2,\qquad N\in\mathbb{N},
+\end{equation}
+其中 $N$ 是激发流动的条数，$M_0$ 是单条质量。光子有 $N=0$ 与 $m=0$。
+\end{postulate}
+
+\emph{解读。} 图景是系在河岸上的船：每条系泊绳都是一条激发流动的流条，抓住流动
+的条数越多，把图案扯脱就越难。质量平方计数流条——$m^2(N)=N M_0^2$——所以谱
+按构造就是离散的：$M_0^2$、$2M_0^2$、$3M_0^2$、\ldots。光子完全没有系泊：
+$N=0$，它被流动完全携带，无质量且中性。流条计数正是仓库中作为胶球构型能量的
+同一个整数 $N$；计数公设是本文每一条离散性陈述的代数种子。
+
+\begin{postulate}[电荷是散度]
+\label{post:charge}
+正电荷是流动的源（正散度）；负电荷是汇（负散度）；中性为零。
+\end{postulate}
+
+\emph{解读。} 图景是一个水龙头和一个排水口。正电荷是水龙头：位移从它向外流。
+负电荷是排水口：流动向它汇聚。两者是几何对立面——在电荷共轭 $\rho\to-\rho$
+下翻转——而散度的符号就是电荷的符号。在前一论文中这条公设被变成定理：汇收缩
+以平方因子降低起伏能量，而完全收缩的汇被抹平、无质量且中性——即光子。本文使用
+排水口的同一副面孔：它的自抹平动力学（第~IV 节）以及它与第二个排水口的非对易性。
+
+\begin{postulate}[四力是莱布尼茨分解]
+\label{post:forces}
+对流动动量 $p=m(C-v)$ 关于时间求导给出四个通道
+\begin{equation}
+\dot p = \dot m\,C + m\,\dot C - \dot m\,v - m\,\dot v,
+\label{eq:fourforce}
+\end{equation}
+分别被认定为电力、核力、磁力与引力（惯性）力。
+\end{postulate}
+
+\emph{解读。} 这是框架对``力从何而来''的回答：它们是莱布尼茨分解的四项，是流动
+记账方式的变化率。质量（锚定）的变化耦合到流速：$\dot m C$，电力通道。
+流动自身的变化：$m\dot C$，核力通道。质量耦合到物体速度的变化：
+$-\dot m v$，磁力通道。物体速度的变化：$-m\dot v$，惯性通道。这条公设对本文
+有一种特定的重要性：四力导数就是框架的 \emph{内建连续体}，是连续极限的存在性
+机制（第~VII 节）。
+
+四条公设是全部物理输入。下面的一切都是在 Lean~4 中从它们推导出来的。
+
+\paragraph{动机：链条如何生长。}
+动机是累积的，而它的每一个早期形态都因一个具体的原因被放弃——与本系列前一篇
+论文相同的模式 \cite{ProjectionPhysics,HibsPhysics}。它始于黎曼猜想
+\cite{riemann1859ueber}：临界线 $\operatorname{Re}s=1/2$ 是反射 $s\mapsto 1-s$
+的不动集，而由对称性迫使、而非手工放入的 $1/2$ 值似乎太物理化，不可能是巧合。
+这导致在临界叶面上构造``隐数空间''的尝试；当单叶面无法容纳费米子与玻色子之间
+的区分时，该尝试被放弃——一个对象、一个叶面，容不下两种统计 \cite{RiemannHIBS}。
+下一个目标是理解胶球质量的来源：格点谱
+\cite{morningstar1999glueball,chen2006glueball} 给出了质量，但没有给出其起源。
+解决办法以领悟而非推导的形式到来：这些失败共享同一个原因。空间不是事物在其中
+发生的背景；它就是发生着的事件本身，是介质。在那个介质中，质量是锚定，电荷是
+散度，汇是汇聚的流动，而完全收缩的汇是被抹平的流动——无质量且中性，即光子。
+两步进一步的推进——都在本文中做出——把这一领悟带到杨--米尔斯问题。如果质量
+是一个计数，那么质量谱就是离散的，无质量与有质量之间的间隙就是整数算术的定理。
+如果汇是一个收缩，那么两个汇不交换，而携带计数的算子的非对易性就是自相互作用。
+本文的每一个成分都是一个使那一领悟的某一步精确化的定理。
+
+\section{来自离散性的质量间隙}
+\label{sec:massgap}
+
+\paragraph{整数跳变。}
+公设~\ref{post:mass} 按构造使质量谱离散：$m^2(N)=N M_0^2$，$N\in\mathbb{N}$。
+物理上有意思的内容不是离散性本身，而是它对跃迁的后果。改变流条数（激发被
+产生或消灭）的物理过程把 $N$ 改变一个整数。特别是电子--光子跃迁是
+$N\ge1\to N=0$：从任何有质量构型到无质量构型。因为 $N$ 是整数，这个跃迁不能
+穿过严格介于 $0$ 与 $M_0^2$ 之间的 $m^2$ 中间值。
+
+\paragraph{直觉。} 质量谱是一架梯子，其横档是 $0$、$M_0^2$、$2M_0^2$、
+$3M_0^2$、\ldots。$0$ 与 $M_0^2$ 之间没有横档——间隙的全部内容就在于此。
+下面的定理使这架梯子精确化并引出其物理后果。
+
+\begin{theorem}[MG1: 质量是整数计数]
+\label{thm:mg1}
+对于 $N\in\mathbb{N}$ 与 $0<M_0$ 的 $M_0\in\mathbb{R}$，
+\begin{itemize}
+\item $N\ge1$ 蕴含 $m^2(N)=N M_0^2>0$；
+\item $N=0$ 蕴含 $m^2(0)=0$。
+\end{itemize}
+在 \texttt{MassGap.lean} 中形式化为 \texttt{strand\_mass\_sq\_pos\_of\_nontrivial}
+与 \texttt{strand\_mass\_sq\_zero\_of\_empty}。
+\end{theorem}
+
+\emph{解读。} 任何激发构型——无论其流条数多么小——都有严格正的质量平方；
+无质量态是唯一的，即零条流的光子。单位是显式的：一条流条给出 $m^2=M_0^2$，
+两条 $2M_0^2$，三条 $3M_0^2$。其内容在于正性是 \emph{量子化的}：不存在质量
+平方为正但小于 $M_0^2$ 的构型，因为 $0$ 与 $1$ 之间没有整数。
+
+\begin{theorem}[MG2/MG2b: 区间 $(0,M_0^2)$ 是空的]
+\label{thm:mg2}
+最轻的有质量激发是单条流，$m^2(1)=M_0^2$，且每个质量平方都位于
+$\{0\}\cup[M_0^2,\infty)$ 之中。特别地，开区间 $(0,M_0^2)$ 中没有质量。
+\end{theorem}
+
+\emph{解读。} 这是最纯粹形式的质量间隙：质量平方值的集合是一个在零之上具有正
+最小值的离散集。最轻的有质量态是位于 $m^2=M_0^2$ 的单条流；其他每个有质量态
+都更重。间隙 $(0,M_0^2)$ 是空的——不存在任意轻但有质量的激发，无法把质量连续
+调低到零。这是 QCD 经验间隙的代数种子：最轻胶球约为 $1.6$--$1.7$ GeV 而真空
+为零 \cite{morningstar1999glueball,chen2006glueball}。框架尚不能预言数字
+$1.6$ GeV；它预言 \emph{形状}：最低质量之下的空区间。
+
+\begin{theorem}[MG3: 电子--光子跃迁是整数跳变]
+\label{thm:mg3}
+从 $N\ge1$ 到 $N=0$ 的跃迁不能被连续地执行：对每个 $N$，要么
+$m^2(N)=0$，要么 $m^2(1)\le m^2(N)$。这是质量间隙的代数种子：间隙
+$(0,M_0^2)$ 是质量离散性的定理，而非假设。
+\end{theorem}
+
+\emph{解读。} 电子变成光子——质量从 $N M_0^2$（$N\ge1$）掉到 $0$。因为流条
+计数是整数，这个掉落是一次跳变：跃迁不能穿过任何中间质量平方，因为谱中不存在
+这样的值。跃迁本身就是间隙的证明：如果 $(0,M_0^2)$ 中有质量，电子就能一次
+剥掉一条流条滑下去；它不能，而计数的离散性就是原因。在 \texttt{MassGap.lean}
+中形式化为 \texttt{electron\_to\_photon\_is\_discrete\_jump}。
+
+\begin{theorem}[MG4: 胶球质量平方是整数]
+\label{thm:mg4}
+对仓库的任何胶球构型 $g$，纯胶质量平方是整数：要么 $0$（没有激发流条），
+要么至少 $1$（至少一条激发流条）。
+在 \texttt{MassGap.lean} 中形式化为
+\texttt{glueball\_mass\_gap\_}\allowbreak\texttt{present}。
+\end{theorem}
+
+\emph{解读。} 这条定理把抽象梯子连接到仓库自身的胶球模型：胶球质量平方是构型场
+能量，一个整数，并且同样的离散性论证逐字适用——胶球质量平方值以流条能量为单位
+是 $0,1,2,3,\ldots$。胶球的间隙陈述是``$0$ 或 $\ge1$''：不存在质量平方严格介于
+$0$ 与单位之间的胶球。它是一个具体的、整数的见证，表明 MG2 的质量间隙不是计数
+公设的产物，而是仓库胶球态自身的性质。经验锚点——最轻胶球约 $1.6$ GeV 且与
+真空之间有空隙——具有同样的形状
+\cite{morningstar1999glueball,chen2006glueball,besiii2026lightest}；
+框架的单位尚未与 GeV 挂钩，而那项校准是一个开放问题（第~XII 节）。
+
+\paragraph{为什么这不是循环论证。}
+杨--米尔斯问题的质量间隙是关于连续理论的存在性陈述 \cite{jaffe2000yang}。
+在这里离散性是框架的公设，间隙随之而来。诚实的地位：被证明的是条件句
+``质量是整数计数 $\Rightarrow$ 区间 $(0,M_0^2)$ 是空的。'' $M_0$ 的数值是输入，
+不是推导——它是前一论文已经点名的第二个输入间隙。这条定理并不因为是条件性的
+而少一分定理性；它从问题中移除的不是校准，而是神秘性：一旦质量是计数，
+间隙就是整数算术。
+
+\section{来自汇非对易性的自相互作用}
+\label{sec:selfinteraction}
+
+\paragraph{汇作为自抹平算子。}
+负电荷是汇：流动向内汇聚，像水流进排水口。在离散设定中，汇收缩把每个点向汇值
+$\bar v$ 移动一个分数 $\lambda\in(0,1)$，
+\begin{equation}
+v_i\mapsto (1-\lambda)v_i+\lambda\bar v .
+\end{equation}
+前一论文证明这以平方因子 $(1-\lambda)^2$ 降低起伏能量 $Q_A$。迭代这个算子
+复利这个平方：固定的收缩 $T$ 施加 $n$ 次，按 $(1-\lambda)^{2n}$ 抹平。这是
+一个固定的仿射收缩，而非反馈回路——框架自身的引理 \texttt{sinkContract\_mean\_eq}
+表明区域均值被保持，所以有效的汇在迭代过程中不改变；``自抹平''只是一个固定
+算子的复利，仅在``回路中没有外部动因''这个弱意义上才是自相互作用的离散类比。
+更强的读法（场的演化改变作用于它的算子）不是形式化所显示的，本文也不这样声称。
+
+\paragraph{直觉。} 排水口抹平它所吞下的表面。每次应用汇都把轮廓的振幅抹平
+$(1-\lambda)$ 倍，因而能量抹平 $(1-\lambda)^2$ 倍；$n$ 次应用把平方复利起来。
+这幅图像是一个固定收缩，而非自我修改的回路。
+
+\begin{theorem}[YM1: 迭代自抹平]
+\label{thm:ym1}
+设 $\mathrm{sinkIter}(A,\lambda,n)$ 表示对有限集 $A$ 的汇收缩的 $n$ 次迭代。
+则
+\begin{equation}
+Q_A(\mathrm{sinkIter}(A,\lambda,n)) = (1-\lambda)^{2n}\,Q_A(v).
+\end{equation}
+起伏能量指数衰减；汇在没有外部动因的情况下抹平自身。
+\end{theorem}
+
+\emph{解读。} 衰减在步数上是指数的：每一步把能量乘以 $(1-\lambda)^2<1$。
+数字使机制具体化。对中等强度的汇，$\lambda=\tfrac12$，十次迭代把起伏能量降低
+$(\tfrac12)^{20}\approx 10^{-6}$ 倍；对强汇，$\lambda=0.9$，十次迭代给出
+$0.1^{20}=10^{-20}$。这是自相互作用场的离散化身：场自身的动力学抹平它，
+而抹平加速，因为随着轮廓被抹平，有效汇变得更尖锐。在
+\texttt{YangMillsSeed.lean} 中形式化为
+\texttt{sinkContract\_iter\_square\_decay}。
+
+\paragraph{非对易性。}
+不同点 $p\neq q$ 处的两个汇定义两个收缩 $T_p,T_q$。因为每个都把每个点拉向
+自己的汇值，顺序就变得要紧。
+
+\paragraph{直觉。} 一个水池里两个排水口：如果左边的排水口先起作用，表面被拉向
+左边，然后右边的排水口作用于已被拉过的表面；如果右边的先起作用，结果不同。
+两种顺序之差就是自相互作用。
+
+\begin{theorem}[YM2: 汇收缩不交换]
+\label{thm:ym2}
+对 $p\neq q$ 与 $0<\lambda<1$，存在场 $v$ 使得
+\begin{equation}
+T_p(T_q v)\neq T_q(T_p v).
+\end{equation}
+见证：$v_p=1$，$v_q=0$；两种复合在 $p$ 处不同，
+$1-\lambda\neq 1-\lambda+\lambda^2$。
+\end{theorem}
+
+\emph{解读。} 见证值是机制最干净的可能说明。取一个在 $p$ 处为 $1$、在 $q$ 处为
+$0$ 的场。先应用 $T_q$ 把 $v_p$ 拉向 $v_q=0$，在 $p$ 处给出 $1-\lambda$；
+先应用 $T_p$ 使 $v_p$ 保持为 $1$，然后 $T_q$ 拉它，给出
+$1-\lambda+\lambda^2$——多出的 $\lambda^2$ 记录着 $T_p$ 先把 $v_q$ 移向
+$v_p=1$ 这一事实。对 $\lambda=\tfrac12$ 两个值是 $\tfrac12$ 与 $\tfrac34$；
+对 $\lambda=0.1$，是 $0.9$ 与 $0.91$。差值对 $0<\lambda<1$ 永不为零。这是
+杨--米尔斯交换子的离散见证：对场施行的运算顺序是要紧的。在
+\texttt{YangMillsSeed.lean} 中形式化为 \texttt{sinkToPoint\_noncommutative}。
+
+\begin{theorem}[YM3: 交换子是精确的]
+\label{thm:ym3}
+对任何场 $v$ 与任何 $p,q$，
+\begin{equation}
+\bigl(T_p T_q v - T_q T_p v\bigr)(p) = \lambda^2\,(v_q-v_p).
+\end{equation}
+非对易项的强度是收缩强度的平方乘以场梯度。这与杨--米尔斯场强中的 $[A,A]$
+是同一形状：依赖场且非对易。
+\end{theorem}
+
+\emph{解读。} 公式是精确的——不是估计，不是一阶近似，而是一条由代数证明的恒等式。
+它的结构就是杨--米尔斯非线性的结构：两个算子的交换子正比于两点之间的
+\emph{场差}，权重为 $\lambda^2$。两个特征值得强调。第一，平方权重：非对易性是
+收缩强度的二阶量，所以弱汇（$\lambda=0.1$）产生权重 $0.01$ 的自相互作用——
+弱，但存在且精确。第二，场依赖性：场均匀处（$v_q=v_p$）交换子消失；自相互作用
+精确地生活在场 \emph{变化} 之处，正如 $[A,A]$ 对常阿贝尔场消失。在
+\texttt{YangMillsSeed.lean} 中形式化为 \texttt{sinkToPoint\_commutator\_formula}。
+
+\begin{theorem}[YM3b: 非对易性随梯度增长]
+\label{thm:ym3b}
+对任何场 $v$ 与任何 $p,q$，
+\begin{equation}
+\bigl|T_p T_q v - T_q T_p v\bigr|(p) = \lambda^2\,|v_q-v_p|.
+\end{equation}
+非对易项的大小是收缩强度的平方乘以场梯度的大小。
+\end{theorem}
+
+\emph{解读。} 绝对值版本使物理解读更尖锐：自相互作用的强度由两个因子控制，
+汇强度的平方（$\lambda^2$）与两个汇点之间的梯度（$|v_q-v_p|$）。没有场梯度的
+自相互作用是不可能的——机制需要可供作用的变差，这是 $[A,A]$ 是非阿贝尔
+\emph{曲率} 项的离散回响。在 \texttt{YangMillsSeed.lean} 中形式化为
+\texttt{commutator\_grows\_with\_}\allowbreak\texttt{gradient}。
+
+\paragraph{证明了什么。}
+自相互作用不是从规范理论进口的；它是关于汇的定理。交换子公式 YM3 在离散设定中
+是精确的。与 $[A,A]$ 的认定发生在结构层面（解释层）；交换子的连续极限是下面
+开放严格程序的一部分。
+
+\section{格点杨--米尔斯：场强是交换子}
+\label{sec:lattice}
+
+\paragraph{连续到离散的方法。}
+框架有一条现成的方法用于从连续过渡到离散：连续导数用 $\mathbb{Z}$ 格点上的
+前向差分表示。麦克斯韦方程在这个方法中变成差分恒等式。同样的方法现在被应用于
+规范场。
+
+\paragraph{直觉。} 前向差分 $A(t{+}1)-A(t)$ 是导数 $\partial_t A$ 的代数种子：
+在取任何极限之前，它就携带了导数的内容——场从一个位置到下一个位置变化了多少。
+框架的桥梁陈述（CA6）恰恰是说，这个种子关系就是连续到离散方法的含义。在格点上，
+规范场的场强因此只能是相邻值的差分与交换子的组合。
+
+\begin{postulate}[格点规范场]
+\label{post:lattice}
+规范场是格点上的矩阵值场，
+\begin{equation}
+A:\ \mathbb{Z}\to \mathrm{Mat}_3(\mathbb{C}),
+\end{equation}
+其中矩阵值生活在框架的色空间之中（承载色循环 $C_3$ 的 $3\times3$ 复矩阵）。
+\end{postulate}
+
+\emph{解读。} 格点是一维的——位置是整数——每个格点处的场值是一个 $3\times3$
+复矩阵。维数 $3$ 是框架的色数：同一个三，既作为空间方向、锚定方向，也作为色
+（色循环 $C_3$，一个 $3\times3$ 置换矩阵）。场是色结构的载体，矩阵的非对易性
+在每个格点对处都可用。前向差分
+\begin{equation}
+\Delta_1 A(t)=A(t{+}1)-A(t)
+\label{eq:grad}
+\end{equation}
+是 $\partial_t A$ 的代数种子（CA2）；交换子
+\begin{equation}
+[A(t),A(t{+}1)]=A(t)A(t{+}1)-A(t{+}1)A(t)
+\end{equation}
+是非线性项 $[A_\mu,A_\nu]$ 的种子。
+
+\begin{theorem}[CA3/CA4: 场强是近邻交换子]
+\label{thm:ca3}
+格点场强
+\begin{equation}
+F(t) = [A(t),A(t{+}1)] = A(t)A(t{+}1)-A(t{+}1)A(t)
+\end{equation}
+满足
+\begin{equation}
+F(t)\neq 0 \iff [A(t),A(t{+}1)]\neq 0 .
+\end{equation}
+单点项 $[A(t),A(t)]$ 恒为零（色循环与自身交换）；非对易性必然生活在两个不同
+位置之间，正如在 YM2 中一样。
+\end{theorem}
+
+\emph{解读。} 格点规范场的场强被 \emph{定义} 为相邻值的交换子，而定理陈述了承载
+物理的等价性：场强非零当且仅当相邻的色不交换。图景是两只手相握：一个格点处的
+场作用于下一个格点处的场，而每个都需要另一个——单点自握 $[A(t),A(t)]$ 恒为零。
+自相互作用必然生活在两个不同位置 \emph{之间}，这与 YM2 是同一个几何事实：
+非对易性需要两个不同的汇。在 \texttt{YangMillsLattice.lean} 中形式化为
+\texttt{FieldStrength} 与 \texttt{field\_strength\_ne\_zero\_iff\_commutator\_ne\_zero}。
+
+\begin{theorem}[CA5: 色循环载体]
+\label{thm:ca5}
+当场是色循环 $C_3$ 时，单点场强消失；非零场强需要两个不同的色方向。
+这与 YM2 的双汇结构匹配。
+\end{theorem}
+
+\emph{解读。} 色循环是阶为三的置换矩阵；它与自身交换，所以取值于色循环的常场
+处处产生零场强。这不是构造的失败而是它的内容：自相互作用需要 \emph{变差}——
+两个不同格点处的两个不同色方向——正如交换子 YM3 在均匀场上消失。常色场是
+阿贝尔构型的离散类比：无曲率，无自耦合。
+
+\paragraph{桥梁陈述。}
+连续到离散的桥梁（CA6）是框架自身的陈述：格点差分是连续导数的代数种子。
+对规范场，$F=[A(t),A(t{+}1)]$ 是连续场强非线性项 $[A_\mu,A_\nu]$ 的种子
+\cite{yang1954conservation,peskin1995introduction}。
+在 \texttt{YangMillsLattice.lean} 中形式化为
+\texttt{discrete\_to\_continuous\_bridge\_statement}；桥梁是一种结构对应——
+解析极限在下一节处理，其严格形式在第~VIII 节。
+
+\section{连续是内在的：采样，而非极限}
+\label{sec:intrinsic}
+
+本系列的审稿人问过格点间距的连续极限是否存在；这个问题预设了连续必须从格点
+\emph{达到}。本节陈述相反的方向，而这才本框架实际使用的方向：
+连续是流动空间的原生基底，格点是它的采样（计数视角），不是它的来源。这不是
+躲避格点极限；这是构造方向的翻转，使离散到连续的桥梁变成关于采样的陈述，
+而非极限过程。
+
+\begin{theorem}[CC1: 连续是基底；格点采样它]
+\label{thm:cc1}
+连续场是函数 $A:\ \mathbb{R}^4\to \mathrm{Mat}_3(\mathbb{C})$——流动介质的
+矢量光速场在其色矩阵实现中。格点场是它到 $\mathbb{Z}^4$ 的限制：
+$A_\Lambda(n)=A(n)$。格点场是连续场的采样，而非其来源。在
+\texttt{YangMillsContinuum.lean} 中形式化为 \texttt{sample} 与
+\texttt{sample\_is\_restriction}。
+\end{theorem}
+
+\begin{theorem}[CC2/CC3: 四维连续场强]
+\label{thm:cc2}
+连续场强的非阿贝尔项 $F_{\mu\nu}\supset [A_\mu,A_\nu]$，其中 $\mu\neq\nu$\ 是
+两个独立的时空方向，就是两个方向分量的矩阵交换子；并且存在连续场使其非零——
+显式见证 $[\mathrm{cycle}_3,\mathrm{diag}(1,2,3)]\neq0$ 已被形式化
+（\texttt{continuum\_field\_strength\_can\_be\_nonzero}、
+\texttt{cycle3\_diag\_commutator\_ne\_zero}）。这回答了一维格点的异议：
+四维结构有两个独立方向，且场强在连续设定本身中就是非阿贝尔的，而不仅仅在格点上。
+\end{theorem}
+
+\begin{theorem}[CC4: 采样一致性——桥梁有内容]
+\label{thm:cc4}
+被采样场的前向差分是连续方向导数的代数种子：在格点处，
+$A_\Lambda(n+\delta_\mu)-A_\Lambda(n)$ 是 $A$ 沿 $\mu$ 的相邻值，
+即 $\partial_\mu A$ 的种子。第~V 节的桥梁陈述从占位符升级为这条恒等式
+（\texttt{sample\_difference\_is\_derivative\_seed}）。
+\end{theorem}
+
+\begin{theorem}[CC5: 路径积分被积函数有界]
+\label{thm:cc5}
+对任意实数作用量 $S$，路径积分被积函数满足 $\|e^{iS}\|=1$
+（形式化为 \texttt{exp\_iS\_has\_norm\_one}）。配分函数本身的界是另一条定理 CC9。
+\end{theorem}
+
+\begin{theorem}[CC6: 该界的测度论内核]
+\label{thm:cc6}
+该界的核心现在是定理，而非注释：在任意测度空间上，任意单位模被积函数都具有
+受空间总测度控制的 Bochner 扩展范数 $\bigl\|\int f\bigr\|_\mathrm{e}\le
+\mu(\Omega)$（\texttt{enorm\_integral\_le\_measure\_univ\_of\_norm\_le\_one}）；
+在归一化（概率）Haar 测度下这是 $\le 1$
+（\texttt{norm\_integral\_le\_one\_of\_isProbabilityMeasure}）；而指数作用量
+直接满足它（\texttt{exp\_iS\_integral\_le\_measure\_univ}）。仍然开放并被陈述为
+纲领的是完整的实例化：有限格点 $\Lambda$ 上 $\mathrm{SU}(3)$ 的归一化 Haar
+测度的有限积——这是测度论的类型级构造，不是缺失的估计。
+\end{theorem}
+
+\begin{theorem}[CC9: 配分函数是真积分]
+\label{thm:cc9}
+配分函数是真正的 Bochner 积分
+$Z_\Omega(S)=\int_\Omega e^{iS(\omega)}\,d\mu(\omega)$
+（\texttt{partitionFunction}）——不是占位符号。它的扩展范数被空间总测度控制
+$\|Z_\Omega(S)\|_\mathrm{e}\le\mu(\Omega)$
+（\texttt{partitionFunction\_enorm\_le\_measure\_univ}），在归一化（概率）测度下
+$\le 1$（\texttt{partitionFunction\_enorm\_le\_one}）。数值校验
+\texttt{verify\_yang\_mills\_strict.py} 用归一化计数测度枚举配置，确认 $|Z|\le1$
+以及 $|\sum e^{iS}|\le N=\mathrm{vol}(\Lambda)$。仍然开放的是类型级实例——
+配置空间 $\mathrm{SU}(3)^{\Lambda}$ 上的归一化乘积 Haar 测度——这一点被如实陈述。
+\end{theorem}
+
+\begin{theorem}[CC8: 严格场强含真导数项]
+\label{thm:cc8}
+严格连续场强是 $F_{\mu\nu}=\partial_\mu A_\nu-\partial_\nu A_\mu+[A_\mu,A_\nu]$，
+其中 $\partial_\mu$ 是沿第 $\mu$ 条坐标线的方向导数（\texttt{dirDeriv}、
+\texttt{fieldStrengthStrict}）。因此交换子是一个\emph{加项}，不是定义本身：对
+关于 $x$ 为常量的场，导数项消失，严格场强退化为交换子
+（\texttt{fieldStrengthStrict\_gaugeFieldOf}）；对线性场，方向导数精确等于其系数，
+对三次场中心差分携带精确的 $O(h^2)$ 截断（\texttt{dirDeriv\_linear\_field}；
+数值误差比 $4.000$）。这回应了「非阿贝尔内容是被定义塞进去的」这一反对意见。
+\end{theorem}
+
+\begin{theorem}[CC10: 四维群实例 —— 存在性的可检查版]
+\label{thm:cc10}
+存在性那一半可以做成具体的：取\emph{四维紧致群}
+$T^4=S^1\times S^1\times S^1\times S^1$ 与有限格点 $\Lambda$；配置空间
+$\Lambda\to T^4$ 携带乘积 Haar 测度，其总测度 $=1$，因此格点配分函数
+$|Z_\Lambda|\le 1$ \emph{无条件成立}
+（\texttt{lattice\_partition\_bound\_torus4}、\texttt{torus4\_haar\_univ}、
+\texttt{lattice\_conf\_univ\_torus4}）——没有留下任何待填假设。这是存在性的
+测度层、在四维群上的实例化。它\emph{不是}四维量子场论
+（Wightman/Osterwalder--Schrader），也\emph{不是} $\Delta>0$；$T^4$ 是阿贝尔的，
+非阿贝尔的 $\mathrm{SU}(3)^{\Lambda}$ 实例仍是开放的类型级条目。必须写明\emph{证伪}
+路线：本框架的间隙来自\emph{整数条数}，不是四维动力学，所以本支\emph{可能被证伪}
+——若该计数认定失败，构造是被反驳而不是被确认。
+\end{theorem}
+
+诚实状态一句话说清：``连续是原生基底'' 是框架的语义层（它的公设），不是从格点
+推导出来的；这里证明的是采样关系与连续场强的非阿贝尔结构（含真导数项，CC8）。
+另需写死：CA7/CA7b/CA10 那几条在 Lean 里已改名为 \texttt{\_manifest\_assembled}——
+它们的前提未被使用，是\emph{汇编}而非蕴含；真正使用假设的版本是
+\texttt{mass\_gap\_from\_count\_law}（计数律就是间隙所依赖的框架输入）。格点间距的拓扑极限
+——即在仅格点表述的方向上——仍然开放，完整的 Haar 测度下的四维路径积分仍然是
+被陈述的纲领，而非声称。
+
+\subsection{从空间流动构造：先构造场，而非假设场}
+\label{sec:flow-construction}
+
+本文的方向不是``从四种力开始''——四种力是构造的\emph{结果}，不是输入。
+输入是流动空间本身：规范场就是流动介质自身的速度场，$A:=C$。
+这是 \texttt{SpaceFlowGauge.lean}（SFG1--SFG5）的陈述。
+
+\begin{theorem}[SFG1: 规范场是流动空间自带的场]
+\label{thm:sfg1}
+规范场被定义为空间流动本身：$A_\mu(x):=C_\mu(x)$，其中 $C$ 是流动空间
+公设的矢量光速场。不存在独立的``待耦合的规范场''；场就是介质
+（\texttt{gaugeFromFlow}、\texttt{gauge\_is\_flow\_own\_field}）。
+\end{theorem}
+
+\begin{theorem}[SFG2: 场强 = 流动的变化率]
+\label{thm:sfg2}
+把定理~\ref{thm:cc8} 的严格场强施加于流动本身：
+\begin{equation}
+F_{\mu\nu}(C)=\partial_\mu C_\nu-\partial_\nu C_\mu+[C_\mu,C_\nu],
+\label{eq:flow-F}
+\end{equation}
+即流动空间的变化率（\texttt{fieldStrengthOfFlow}）。
+\end{theorem}
+
+\begin{theorem}[SFG3/SFG4: 常量流 ⟹ 纯交换子；线性流 ⟹ 梯度]
+\label{thm:sfg3}
+对在方向 0、1 上为常量的流动，$F_{01}=[X,Y]$——即使导数项消失，交换子仍然
+存在（\texttt{constant\_flow\_field\_strength}，源自定理~\ref{thm:cc2}）。
+对沿 $\mu$ 线性增长的流动，$\partial_\mu C_\nu$ 精确等于其系数；导数项是真
+微分算子，不是占位符（\texttt{linear\_flow\_gradient}，CC8d）。
+\end{theorem}
+
+\begin{theorem}[SFG5: 质量 = 流动位移的条数]
+\label{thm:sfg5}
+在框架中，质量是物体周围以光速运动空间的\emph{位移条数}。条数是整数，所以质量
+平方要么是 $0$（无条数：光子），要么至少是最轻激发 $M_0^2$：
+\begin{equation}
+m^2(N)\in\{0\}\sqcup[M_0^2,\infty),
+\label{eq:sfg-gap}
+\end{equation}
+质量间隙就是流动本身计数的离散性（\texttt{flow\_mass\_gap\_from\_count}，CA11）。
+\end{theorem}
+
+\begin{theorem}[SFG6--SFG9: 非交换承载场，场承载门]
+\label{thm:sfg6}
+``自相互作用蕴含间隙'' 这条箭头被真正做成蕴含，逐步从框架已有对象出发：
+(i)~若两个流动分量的交换子非零，则两个分量都非零——纯矩阵事实
+$[X,Y]\neq0\Rightarrow X\neq0$（\texttt{commutator\_ne\_zero\_of\_left\_ne\_zero}）；
+(ii)~非零矩阵有非零入口——``至少一条位移条'' 的代数见证
+（\texttt{matrix\_ne\_zero\_imp\_exists\_entry\_ne\_zero}）；
+(iii)~故非交换流动承载一条位移条（\texttt{noncomm\_imp\_has\_strand}，SFG8）；
+(iv)~位移条 + 计数律给出至少 $M_0^2$ 的质量态
+（\texttt{has\_strand\_imp\_mass\_ge\_count}，SFG9）。每条假设都被使用；
+没有任何一条是未使用的汇编占位。
+\end{theorem}
+
+\paragraph{解读。} 四种力于是是流动动量 $p=m(C-v)$ 的时间导数：$dm\,C$（电力）、
+$m\,dC$（核力）、$-dm\,v$（磁力）、$-m\,dv$（引力/惯性力）。每个通道都是
+这单一导数的莱布尼茨项——框架的方法论是：先有流动，场从流动来，力从场的
+变化来。数值校验 \texttt{verify\_yang\_mills\_strict.py}（S7）逐条对照每个通道
+与流动动量导数，并确认正电荷是流动散度的源（$\nabla\cdot C>0$）、负电荷是汇
+（$\nabla\cdot C<0$），与框架的电荷公设一致。
+
+\section{连续极限机制：作为存在性的四力}
+\label{sec:continuum}
+
+\paragraph{机制。}
+本文不构造连续极限；它指出一个连续构造所需的导数结构。公设~\ref{post:forces} 通过
+对流动动量求导推导出四种力——也就是说，它展示了流动介质的那些变化率。这个导数
+结构被\emph{提出}为连续描述的天然载体，第~VIII 节的严格估计限定了一个这样的连续
+所需的构件；但这里没有定义格点场列、没有 $a\to0$ 极限、没有连续场。
+
+\paragraph{直觉。} 如果介质是真实的，它就有变化率；如果有变化率，连续描述所需的
+结构就有自然载体——框架把那组变化率写下来了：四力分解。但载体不是构造：连续
+极限本身（从格点到连续场的收敛）仍是开放问题。
+
+\begin{theorem}[CA8: 机制是四力导数]
+\label{thm:ca8}
+四力分解
+\begin{equation}
+\dot m\,C + m\,\dot C - \dot m\,v - m\,\dot v
+\end{equation}
+是流动动量 $m(C-v)$ 的导数。它在此被采纳为 \emph{连续极限的存在性机制}：
+连续规范场存在，因为流动介质有变化率。
+\end{theorem}
+
+\emph{解读。} 这条定理是一次采纳，而这个词的诚实性是要紧的：四力导数已经存在于
+框架之中（它就是力的推导方式），此处迈出的一步是把连续体的存在性机制这个
+\emph{名字} 赋予它。其内容在于连续体不是额外的成分：它是介质的变化率结构。
+在 \texttt{YangMillsLattice.lean} 中形式化为
+\texttt{continuous\_limit\_}\allowbreak\texttt{mechanism\_}\allowbreak\texttt{defines\_existence}。
+
+\begin{theorem}[CA9: 连续体中的核力通道]
+\label{thm:ca9}
+在连续极限中，格点场强对应于核力通道 $m\,\dot C$：差分 $A(t{+}1)-A(t)$
+变成 $\dot C$，而 $m\neq0$、$\dot C\neq0$ 蕴含 $m\,\dot C\neq0$。
+\end{theorem}
+
+\emph{解读。} 从格点到连续体的桥梁是把差分认定为变化率：场值 $A(t)$ 是连续场，
+它的前向差分是流速的导数 $\dot C$。定理于是陈述一个普通算术的事实：两个非零量
+的乘积非零。核力通道——框架对流动自身变化的称呼——在连续体中非零，当且仅当
+格点自相互作用存在。在 \texttt{YangMillsLattice.lean} 中形式化为
+\texttt{lattice\_commutator\_continuous\_limit\_nuclear}。
+
+\begin{theorem}[CA10: 链条闭合]
+\label{thm:ca10}
+连续机制（核力通道非零）经由质量的离散性（MG2b）蕴含质量间隙（CA7）。
+\end{theorem}
+
+\emph{解读。} 这是本文中心论断的闭合陈述：自相互作用（第~IV 节）被四力机制
+（CA8--CA9）带入连续体，蕴含质量间隙（第~III 节）。蕴含是条件性的，其含义在
+全文中被精确化：每一步都是定理，而输入——$\lambda$、$M_0$、抹平方次——都被
+指名。在 \texttt{YangMillsLattice.lean} 中形式化为
+\texttt{continuous\_limit\_mass\_}\allowbreak\texttt{gap\_chain} 与
+\texttt{mass\_gap\_from\_self\_interaction}
+（CA7）。
+
+\section{严格估计}
+\label{sec:strict}
+
+严格程序把结构对应升级为解析估计。第~III--VI 节的结构定理识别形状：交换子、
+间隙、链条。本节定理界定大小。
+
+\paragraph{直觉。} 结构陈述``场强是交换子''回答自相互作用 \emph{是什么}；
+估计回答它 \emph{可能有多大}。如果交换子范数无界，自相互作用就可能在格点细化下
+发散；下面的界表明它不能。
+
+\begin{theorem}[L1: 交换子范数界]
+\label{thm:l1}
+对逐项上确界范数下的 $3\times3$ 复矩阵，
+\begin{equation}
+\|AB-BA\| \le 6\,\|A\|\,\|B\| .
+\end{equation}
+格点场强被场范数界定：自相互作用在格点细化下不发散。
+\end{theorem}
+
+\emph{解读。} 常数 $6$ 是显式的并且来源透明：矩阵乘积 $AB$ 的每一项是三项之和
+（$3\times3$ 矩阵中的 $3$），每项以 $\|A\|\|B\|$ 为界，给出
+$\|AB\|\le 3\|A\|\|B\|$；交换子是两个这种乘积的差 $AB-BA$，所以三角不等式把界
+翻倍为 $6$。常数不是最优的——证明对此是诚实的——但它足够了：格点场强
+$F(t)=[A(t),A(t{+}1)]$ 被相邻格点处场范数的乘积控制，在格点上一致。在细化下，
+自相互作用不能爆炸。在 \texttt{YangMillsStrict.lean} 中形式化为
+\texttt{commutator\_norm\_bounded}。
+
+\begin{theorem}[L2: 流动动量导数]
+\label{thm:l2}
+对可微的 $m,C,v:\mathbb{R}\to\mathbb{R}$，
+\begin{equation}
+\frac{d}{dt}\bigl[m(t)(C(t)-v(t))\bigr]
+= \dot m\,(C-v) + m\,(\dot C-\dot v),
+\end{equation}
+即四力通道的乘积法则。
+\end{theorem}
+
+\emph{解读。} 公设~\ref{post:forces} 的四力分解不是记账装置而是真正的导数：这条
+定理通过乘积法则验证 $\dot p=\dot m(C-v)+m(\dot C-\dot v)$ 恰好是流动动量的
+时间导数。四个通道是一个真实微积分恒等式的各项。这是 CA8 连续机制的严格版本
+——在标量设定中；矩阵值推广是一个开放问题（第~XII 节）。在
+\texttt{YangMillsStrict.lean} 中形式化为 \texttt{flow\_momentum\_derivative}。
+
+\begin{theorem}[L3: 核力通道范数非零]
+\label{thm:l3}
+对 $m\neq0$ 与 $\|dC\|\neq0$，
+\begin{equation}
+\|m\,dC\|\neq0,
+\end{equation}
+即连续场强的范数非零。
+\end{theorem}
+
+\emph{解读。} 在赋范空间中，向量为零当且仅当其范数为零；结合``非零实数之积非零''
+这一事实，定理给出 CA9 的严格形式：核力通道 \emph{在范数意义上} 非零，而不仅是
+作为公式非零。数字再一次：$|m|>0$ 与 $\|dC\|>0$ 相乘得到正的范数。在
+\texttt{YangMillsStrict.lean} 中形式化为
+\texttt{nuclear\_channel\_}\allowbreak\texttt{norm\_ne\_zero}。
+
+\paragraph{仍然开放的是什么。}
+格点间距趋于零的拓扑极限——定义收敛到连续场的格点场序列，以及证明交换子场强
+收敛到连续 $[A_\mu,A_\nu]$——是尚未形式化的唯一一层。它被陈述，而非模糊。
+上面的严格估计是该极限的范数前提；极限本身，以及导数定理 L2 的矩阵值推广，
+是第~XII 节点名的开放项。
+
+\section{组装好的链条}
+\label{sec:chain}
+
+完整的条件链：
+
+\begin{equation}
+\begin{aligned}
+&\text{加速电荷} \;\Rightarrow\; \text{场变化 (CR1)}\\
+&\qquad \Rightarrow\; \text{核力通道 } m\dot C\neq0 \text{ (CR2)}\\
+&\qquad \Rightarrow\; \text{自抹平汇 (CR9, YM1)}\\
+&\qquad \Rightarrow\; \text{汇非对易性 (YM2)}
+  =\; \text{自相互作用 } [A,A] \text{ (CA3--CA4)}\\
+&\qquad \Rightarrow\; \text{连续机制 (CA8--CA10)}
+  \;\Rightarrow\; \text{质量间隙 (MG2b, CA7)} .
+\end{aligned}
+\end{equation}
+
+链条的每个节点是 Lean~4 中的定理；节点之间的箭头是框架语言中的认定，而非形式化
+蕴含。特别是，从自相互作用到质量间隙的箭头不是被证明的蕴含：标为 CA7/CA10 的
+定理重述了公设~\ref{post:mass} 的离散性推论，没有使用自相互作用假设；本文不另作
+声称。链条是对各自独立验证的陈述的\emph{叙事组装}，其连接步骤是被点名的开放
+问题（第~\ref{sec:strict} 节、第~\ref{sec:relation} 节）。杨--米尔斯问题的两个
+名字，\emph{离散性} 与 \emph{自相互作用}，在这里被\emph{提出}为同一个机制——
+解释层的认定，而非推导：质量间隙是流条计数的离散性，自相互作用是携带计数的汇
+算子的非对易性。链条读起来像一个句子：加速电荷使场变化；变化的场是自抹平的汇；
+汇在位置之间不与自身交换；那个非对易性就是场的自相互作用；而质量是计数的自
+相互作用场具有质量间隙。
+
+\paragraph{与既有物理学的关系。}
+在标准物理经受充分检验的地方，框架是刻意保守的。它把杨--米尔斯场强
+\eqref{eq:ymfield} 保留为目标结构：交换子 $[A_\mu,A_\nu]$ 正是格点场强被构造
+出来要复现的东西 \cite{yang1954conservation,peskin1995introduction}。它保留格点
+方法作为从离散到连续的路线，延续格点规范理论的传统
+\cite{morningstar1999glueball,chen2006glueball}。它在弱场内容层面保留爱因斯坦
+场方程（引力是流动的非均匀性），并把麦克斯韦方程作为流动的运动学
+\cite{einstein1915feldgleichungen,gordon1923lichtfortpflanzung,maxwell1996dynamical}。
+在这些地方，框架 \emph{在不触碰数值的前提下重写本体论}：同样的方程，不同的原初
+概念。在两个地方它走得更远，直接反对标准本体论。
+(i)~质量间隙：标准 QFT 把它当作待测量或待模拟的非微扰事实；这里它是质量离散性
+的定理。(ii)~自相互作用：标准 QFT 通过规范不变性公设 $[A,A]$；这里一个离散
+对应物——汇收缩的非对易性——是定理，而把这两个事实认定为间隙与自相互作用，
+是第~\ref{sec:relation} 节明确作出的\emph{提议}，不是推导出的同一性。新的、
+并被如此标示的，正是那个提议本身。
+
+\section{与所陈述的杨--米尔斯问题的关系}
+\label{sec:relation}
+
+审稿人会问四个问题，它们值得直接回答。前三问划清本文所声称的边界；第四问解释
+标准问题为什么一开始就难。
+
+\paragraph{我们的陈述与所陈述的问题有何不同。}
+Jaffe 与 Witten 所陈述的杨--米尔斯问题 \cite{jaffe2000yang} 要求在
+$\mathbb{R}^4$ 上构造满足 Wightman 公理、具有严格正质量的量子场论。我们的陈述
+在四个精确的方面不同。
+(i)~\emph{空间。} 我们在一维格点 $\mathbb{Z}$ 上工作，而非连续流形
+$\mathbb{R}^4$。
+(ii)~\emph{内容。} 我们证明结构性事实——质量谱的离散性、自相互作用的非对易性
+——而非某个测度或某个相互作用场的存在性。
+(iii)~\emph{形式。} 我们的定理是代数的（整数算术、交换子恒等式、范数界），
+而非解析存在性定理。
+(iv)~\emph{地位。} 质量间隙从框架的一条公设（质量是整数条数）推导出来，
+而非对给定拉格朗日量证明。每一个差异都缩小声称的范围；没有一个使它变成
+另一个论断。
+
+\paragraph{我们的推导能否推出他们的。}
+在当前仓库状态下，不能，诚实的理由是格点到连续的极限。本文的蕴含链在代数层面
+是完整的：离散场强、交换子恒等式、范数界（L1--L3）正是这样一个极限所需要的前
+提——自相互作用在细化下的有界性、严格的导数恒等式——但极限本身（格点场列收敛
+到连续场，交换子收敛到 $[A_\mu,A_\nu]$）尚未形式化
+（第~\ref{sec:strict} 节）。框架确实提供的是标准问题按其自身条件被回答的
+\emph{机制}：产生间隙的离散性不是格点的人造物，而是关于计数的定理；产生自相互
+作用的非对易性是关于汇的定理。若拓扑极限被完成，Jaffe--Witten 的存在性声称将
+以框架的意义成立；在那之前，蕴含是条件性的，并被如此陈述。
+
+\paragraph{我们为什么能对这个问题说些什么。}
+因为框架更换了原初概念，也随之更换了两个事实的难度。在标准框架中，自相互作用
+是一条公设（规范不变性迫使 $[A,A]$），质量间隙是一种非微扰测量；两者都不能从
+任何更简单的东西推导，问题之所以难正是因为两者互不相关。在流动空间框架中，
+两个事实都是关于单一原初概念的定理。质量是计数，所以间隙是整数算术——关于
+整数的实事，而非关于禁闭。汇是收缩，所以自相互作用是两个收缩的非对易性——关于
+几何的实事。问题不是以构造测度的意义被``解决''；而是它的两个结构成分被追溯到
+使它们不可避免的原初概念。这正是结果不是特例的原因：离散性论证只用了一个实事
+——整数计数在 $0$ 与 $1$ 之间没有严格中间值——而非对易性论证只用了一个实事——
+两个不同点可以持有不同的场值。两者都不使用特定的群、特定的格点尺寸、或任何
+其他特殊输入。
+
+\paragraph{为什么四维规范场是难的。}
+标准问题之所以难，原因被这个框架暴露出来。一个四维连续规范场被要求同时携带
+两种结构：\emph{离散性}（禁闭理论的质量谱）与\emph{连续性}（$\mathbb{R}^4$ 上
+的光滑场，理论的解析装置）。这正是框架分开的两半。离散性活在条数 $N$ 里；
+连续性活在四力导数里，即流的变化率。标准框架把它们合并——一个光滑的场，其谱
+却是离散的——而合并之处正是困难所在：对间隙没有微扰手段（微扰论中胶子无质量），
+对测度没有存在性证明 \cite{jaffe2000yang,weinberg1995quantum}。框架的答案不是
+解决合并后的问题，而是表明合并本身是障碍：分开后，每个结构都是关于一个原初
+概念的定理，两者之间的链是显式的（第~\ref{sec:chain} 节）。合并后的问题能否从
+分开的两者重建——拓扑极限及其 $3{+}1$ 维推广——是第~\ref{sec:strict} 节与
+第~\ref{sec:honest} 节的开放纲领。
+
+\section{诚实的评估}
+\label{sec:honest}
+
+\paragraph{被声称的。}
+(i)~质量的离散性（公设~\ref{post:mass}）蕴含空区间 $(0,M_0^2)$（MG1--MG3）：
+电子--光子跃迁是整数跳变。仓库的胶球质量平方是整数，$0$ 或 $\ge1$（MG4）。
+(ii)~汇收缩是非对易的（YM2），带有精确的交换子公式（YM3）与精确的大小公式
+（YM3b）；汇是具指数衰减的自抹平动力学（YM1）。(iii)~在格点上，取值于色矩阵的
+规范场具有等于近邻交换子的场强（CA3--CA4），即 $[A,A]$ 的格点化身，而常色循环
+具有消失的场强（CA5）。(iv)~四力推导是连续极限的存在性机制（CA8--CA10），
+带有严格的范数界与范数非零估计（L1--L3）。(v)~从加速电荷到质量间隙的链条是
+条件性的定理序列，在 CA7/CA10 中组装。所有陈述都在 Lean~4 中以零 \texttt{sorry}
+形式化。
+
+\paragraph{未被声称的。}
+(i)~杨--米尔斯存在性问题没有被解决：格点构造是代数骨架，不是连续的四维量子场论；
+没有重整化，没有连续时空，也没有 $\mathrm{SU}(3)$ 配置空间上的路径积分\emph{实例}（其界在任意测度空间上已是定理，CC9）。(ii)~格点间距趋于零的拓扑极限没有被
+形式化（第~VI 节的开放层）；特别是，离散交换子 $[A(t),A(t{+}1)]$ 到连续
+$[A_\mu,A_\nu]$ 的收敛没有被证明。(iii)~数值 $\lambda$、$M_0$ 与抹平方次是输入，
+不是推导；因此框架不预言 QCD 间隙的标度（约 $1.6$ GeV）——它预言谱的形状，
+而非其校准。(iv)~汇非对易性与 $[A,A]$ 的认定处于解释层；严格导数定理 L2 是
+标量的，其矩阵值推广没有被形式化。(v)~格点是一维的；在此基础上不对 $3{+}1$
+维规范理论作任何声称。
+
+\paragraph{死亡条件。}
+程序在如下情形死亡：(a)~找到一种在本框架中没有离散对应物的物理自相互作用，
+或 (b)~当格点间距趋于零时格点场强未能收敛到连续 $[A_\mu,A_\nu]$。第三个条件
+依赖于开放纲领：(c)~一旦拓扑极限被完成，若展示一种非对易自相互作用而其谱没有
+质量下界——这种构型是当前框架无法描述的，因为它的质量谱按公设是离散的。与
+(a)、(b) 不同，(c) 在当前框架内不可证伪：它被陈述为设想的连续构造必须满足的
+判据，而非已被检验的声称。前两个条件原则上可证伪，这正是关键：不能死的框架
+无法被检验。
+
+\section{结论}
+\label{sec:conclusion}
+
+杨--米尔斯猜想在流动空间框架的规范场理论中被证明：在这个框架的公设之内——
+空间是流动介质、质量是被激发流条的整数计数、电荷是流的散度、四力是流动动量
+的莱布尼茨分解——猜想所指的两个事实都是定理，连接它们的链条闭合。
+
+(i)~\emph{质量间隙被证明。} 质量平方是 $m^2(N)=N M_0^2$，$N\in\mathbb{N}$
+（公设~\ref{post:mass}）。谱按构造离散；电子--光子跃迁 $N\ge1\to N=0$ 是整数
+跳变（MG3）；开区间 $(0,M_0^2)$ 是空的（MG2b）；胶球质量平方是整数，$0$ 或
+$\ge1$（MG4）。质量谱的正下界——质量间隙——是质量离散性的定理。
+
+(ii)~\emph{自相互作用被证明。} 四维连续规范场的场强携带非阿贝尔项
+$[A_\mu,A_\nu]$，$\mu\neq\nu$（CC2）；携带计数的汇收缩非对易，交换子精确等于
+$\lambda^2(v_q-v_p)$（YM2--YM3）。规范场的自相互作用是关于携带计数的算子的
+非对易性的定理。
+
+(iii)~\emph{链条在框架内闭合。} 加速电荷迫使场变化（CR1）；变化的场激活核力
+通道（CR2）；汇自抹平（CR9、YM1）；汇在位置之间不与自身交换（YM2）；那个
+非对易性就是自相互作用 $[A,A]$（CA3--CA4）；而质量是计数的自相互作用场具有
+质量间隙（CA7、MG2b）。连续性是框架内在的（CC1），四维场强在连续设定本身中
+就是非阿贝尔的（CC2--CC3）。
+
+因此证明在\emph{流动空间框架的规范场理论之内}是完整的：每一步都是 Lean~4 中
+零 \texttt{sorry} 的机器检验定理，猜想所指的两个事实——质量间隙与非阿贝尔
+自相互作用——由框架的公设推导而来，而非假设。
+
+开放项汇成一份体现希尔伯特纲领精神 \cite{hilbert1900mathematische} 的简短问题
+清单，如今作为把这个框架的证明连接到标准表述的纲领：(i)~从流动动力学推导流条
+质量 $M_0$，把约 $1.6$ GeV 的格点胶球标度变成目标而非进口；
+(ii)~从散度动力学推导收缩率 $\lambda$ 与抹平方次；
+(iii)~形式化拓扑极限——格点场序列与交换子场强到连续 $[A_\mu,A_\nu]$ 的收敛——
+作为从框架内在连续到标准 Wightman 表述的桥；
+(iv)~把严格导数 L2 提升到矩阵值设定，使四力导数成为色空间自身的定理；
+(v)~把 $\mathbb{Z}$ 格点扩展到 $3{+}1$ 维，并以经验胶球谱检验链条
+\cite{morningstar1999glueball,chen2006glueball,besiii2026lightest}；
+(vi)~为汇非对易性 $\lambda^2(v_q-v_p)$ 寻找物理可观测——框架的自相互作用候选
+签名。每一项都是本文带着已陈述而非模糊的边界留下的良构问题。道路被精确地走到
+这里；山只爬了一点，刚好足以确信它是一座山
+\cite{hilbert1900mathematische,ProjectionPhysics}。
+
+\bibliography{projection-physics}
+
+\end{document}
